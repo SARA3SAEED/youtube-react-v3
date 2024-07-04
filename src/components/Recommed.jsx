@@ -29,11 +29,9 @@ export default function Recommend({ categoryId }) {
         <a href="#" className="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500">View all</a>
       </div>
       <div className="flex flow-root ">
-        {/* <ul role="list" className="divide-y divide-gray-200 dark:divide-gray-700"> */}
           {videos.map((video) => (
             <ListRecommend key={video.id} video={video} />
           ))}
-        {/* </ul> */}
       </div>
     </div>
   );
