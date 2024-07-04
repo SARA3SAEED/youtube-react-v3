@@ -31,7 +31,7 @@ export default function Sidebar() {
   <div className="flex p-2 text-gray-900 ">
     <aside className="flex  h-screen w-30 flex-col items-center  bg-white">
       <nav className="flex flex-1 flex-col gap-y-4 pt-10">
-        <Link to="/" className="group relative rounded-xl  p-2 text-black-600 hover:bg-gray-50">
+        <Link to="/home" className="group relative rounded-xl  p-2 text-black-600 hover:bg-gray-50">
         <img className='w-7 ml-3' src="https://cdn-icons-png.flaticon.com/128/9440/9440315.png" />
         <small className='ml-3 font-thin'>Home</small>
         </Link>

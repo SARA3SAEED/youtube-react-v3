@@ -35,7 +35,7 @@ export default function Signup() {
       setIsRegistered(true); 
       setRegisterError(false);
       setTimeout(() => {
-        navigate('/login');
+        navigate('/');
       }, 2000);
     } catch (error) {
       console.error('Error signing up:', error);
@@ -191,7 +191,7 @@ export default function Signup() {
                 {/* Register link */}
                 <p className="mb-0 mt-2 pt-1 text-sm font-semibold">
                   Already have an account?
-                  <Link to="/login" className="text-danger transition duration-150 ease-in-out hover:text-danger-600">
+                  <Link to="/" className="text-danger transition duration-150 ease-in-out hover:text-danger-600">
                     Login
                   </Link>
                 </p>

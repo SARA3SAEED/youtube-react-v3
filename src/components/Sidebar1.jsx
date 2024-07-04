@@ -66,7 +66,7 @@ export default function Sidebar1() {
             <li>
             <Link
             className="flex items-center px-3 py-2 text-gray-600 transition-colors duration-300 transform rounded-lg dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700"
-            to="/"
+            to="/home"
             >
             <img className='w-6 h-6 mr-3' src="https://cdn-icons-png.flaticon.com/128/9440/9440315.png" alt="" />
                 <span className="mx-2 text-sm font-medium">Home</span>

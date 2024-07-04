@@ -21,7 +21,7 @@ export default function Login() {
         setLoginError(false);
         setIsLogin(true);
         setTimeout(() => {
-          navigate('/');
+          navigate('/home');
         }, 2000);
 
       } else {

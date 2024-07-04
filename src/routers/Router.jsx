@@ -12,8 +12,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 export default function Router() {
     const router = createBrowserRouter([
         { path: "/signup", element: <Signup /> },
-        { path: "/", element: <Home /> },
-        { path: "/login", element: <Login /> },
+        { path: "/home", element: <Home /> },
+        { path: "/", element: <Login /> },
         { path: "/details/:id", element: <Details /> },
         { path: "/favorite", element: <Favorite /> },
 

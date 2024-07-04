@@ -13,7 +13,7 @@ export default function Nav() {
   const handleLogout = () => {
     localStorage.removeItem('userId');
     setShowModal(false);
-    navigate('/login')
+    navigate('/')
   };
 
   const openModal = () => {
