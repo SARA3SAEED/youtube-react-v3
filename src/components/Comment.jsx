@@ -1,14 +1,128 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Replies from '../components/Replies';
 import Dropdown from '../components/Dropdown';
+import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
 
-export default function Comment({ comment, onDelete }) {
+
+
+
+export default function Comment({ comment }) {
     const [showReplies, setShowReplies] = useState(false);
+    const [userName, setUserName] = useState('');
+    const [replies, setReplies] = useState([]);
+    const [replyBody, setReplyBody] = useState('');
+
+
+
+
+
+    useEffect(() => {
+      const fetchUserName = async () => {
+        try {
+          const response = await axios.get(`https://6685bb30b3f57b06dd4da302.mockapi.io/user/${comment.userid}`);
+          setUserName(response.data.name);
+          console.log(response.data.name);
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        }
+      };
+  
+      fetchUserName();
+    }, [comment.userid]);
+
+  
+
+
+    const handleReplySubmit = async (event) => {
+      event.preventDefault();
+    
+      const userid = localStorage.getItem('userId');
+    
+      const replyData = {
+        id: uuidv4(),
+        createdAt: new Date().toISOString(),
+        commentreply: replyBody,
+        userid: userid,
+      };
+    
+      try {
+        const existingComment = await axios.get(`https://6685bb30b3f57b06dd4da302.mockapi.io/comment/${comment.id}`);
+        const existingReplies = existingComment.data.commentreply || []; 
+    
+        const updatedReplies = [...existingReplies, replyData];
+    
+        const response = await axios.put(`https://6685bb30b3f57b06dd4da302.mockapi.io/comment/${comment.id}`, {
+          commentreply: updatedReplies,
+        });
+    
+        setReplies(updatedReplies);
+        setReplyBody('');
+      } catch (error) {
+        console.error('Error posting reply:', error);
+      }
+    };
+    
+    
 
     const toggleReplies = () => {
       setShowReplies(!showReplies);
     };
+    
+
+
+    const formatTime = (createdAt) => {
+      const date = new Date(createdAt);
+      let hours = date.getHours();
+      const minutes = date.getMinutes();
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12;
+      hours = hours ? hours : 12; 
+      const formattedTime = `${hours}:${minutes < 10 ? `0${minutes}` : minutes} ${ampm}`;
+      return formattedTime;
+    };
+
+
+    const capitalizeFirstLetter = (string) => {
+      return string.charAt(0).toUpperCase() + string.slice(1);
+    };
+
+    const handleDelete = async (commentId) => {
+      try {
+        await axios.delete(`https://6685bb30b3f57b06dd4da302.mockapi.io/comment/${commentId}`);
+        setComments(prevComments => prevComments.filter(comment => comment.id !== commentId));
+      } catch (error) {
+        console.error('Error deleting comment:', error);
+      }
+    };
   
+
+
+    const handleDeleteReply = async (replyId) => {
+      try {
+        // Fetch the comment data first
+        const response = await axios.get(`https://6685bb30b3f57b06dd4da302.mockapi.io/comment/${comment.id}`);
+        const commentData = response.data;
+    
+        // Filter out the reply with the given replyId
+        const updatedReplies = commentData.commentreply.filter(reply => reply.id !== replyId);
+    
+        // Make the API call to update the comment with the updated replies
+        await axios.put(`https://6685bb30b3f57b06dd4da302.mockapi.io/comment/${comment.id}`, {
+          commentreply: updatedReplies,
+        });
+    
+        // Update the state with the updated replies
+        setReplies(updatedReplies);
+        console.log(`Deleted reply with id ${replyId}`);
+      } catch (error) {
+        console.error('Error deleting reply:', error);
+      }
+    };
+    
+
+
+
     return (
       <div className="antialiased mx-auto max-w-screen-sm">
         <h3 className="mb-4 text-lg font-semibold text-gray-900">Comments</h3>
@@ -26,14 +140,12 @@ export default function Comment({ comment, onDelete }) {
             
             <div className="flex-1 border rounded-lg px-4 py-2 sm:px-6 sm:py-4 leading-relaxed">
               
-              <strong>Sarah</strong>{" "}
-              <span className="text-xs text-gray-400">3:34 PM</span>                
-              <Dropdown onDelete={() => onDelete(comment.id)} />
+              <strong>{capitalizeFirstLetter(userName)}</strong>{" "}
+              <span className="text-xs text-gray-400">{formatTime(comment.createdAt)}</span>                
+              <Dropdown onDelete={() => handleDelete(comment.id)} />
 
               <p className="text-sm">
-                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-                nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
-                erat, sed diam voluptua.
+                {comment.comment}
               </p>
               
               <div className="mt-4 flex items-center">
@@ -52,7 +164,7 @@ export default function Comment({ comment, onDelete }) {
                 </div>
 
                 <div className="text-sm text-gray-500 font-semibold cursor-pointer" onClick={toggleReplies}>
-                  {showReplies ? 'Hide Replies' : '5 Replies'}
+                  {showReplies ? 'Hide Replies' : ' Replies'}
                 </div>
               </div>
             </div>
@@ -72,7 +184,28 @@ export default function Comment({ comment, onDelete }) {
                   Replies
                 </h4>
                 <div className="space-y-4">
-                 <Replies/>
+
+                 {replies && replies.length > 0 && replies.map(reply => (
+                                                <div key={reply.id}>
+                                                  <Replies reply={reply} onDelete={() => handleDeleteReply(reply.id)} />
+                                                </div>
+                                              ))}
+
+                    <form onSubmit={handleReplySubmit} className="mt-2">
+                      <textarea
+                        className="bg-gray-100 rounded border border-gray-400 leading-normal resize-none w-full h-20 py-2 px-3 font-medium placeholder-gray-700 focus:outline-none focus:bg-white"
+                        placeholder="Reply to this comment"
+                        value={replyBody}
+                        onChange={(e) => setReplyBody(e.target.value)}
+                        required
+                      />
+                      <button
+                        type="submit"
+                        className="mt-2 px-4 py-1.5 rounded-md text-white text-sm bg-indigo-500 hover:bg-indigo-600"
+                      >
+                        Reply
+                      </button>
+                    </form>
                  
                 </div>
               </div>

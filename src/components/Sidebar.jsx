@@ -1,10 +1,29 @@
 import React from 'react';
 import CardVideo from '../components/CardVideo';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 
 
 export default function Sidebar() {
+
+  const [videos, setVideos] = React.useState([]);
+
+  React.useEffect(() => {
+    const fetchVideos = async () => {
+      try {
+        const response = await axios.get('https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&maxResults=30&regionCode=US&key=AIzaSyCkmleMPcUGZQpOC8DcDWmexkwGWyzJsvI');
+        setVideos(response.data.items);
+        console.log('Fetched videos:', response.data.items);
+        console.log('Fetched videos:', response.data);
+
+      } catch (error) {
+        console.error('Error fetching videos:', error);
+      }
+    };
+
+    fetchVideos();
+  }, []);
 
   return (
   <>
@@ -27,7 +46,7 @@ export default function Sidebar() {
 
 
         <Link
-          to="/details"
+          to="#"
           className="group relative rounded-xl  p-2 text-black-600 hover:bg-gray-50"
         >
           <img className='w-7 ml-3 ' 
@@ -48,14 +67,12 @@ export default function Sidebar() {
     </aside>
 
 
-      <div className='flex flex-wrap '>
-      <CardVideo/>
-      <CardVideo/>
-      <CardVideo/>
-      <CardVideo/>
-      <CardVideo/>
+      <div className='flex flex-wrap w-[100%] h-[150px]'>
+      {videos.map((video) => (
+          <CardVideo key={video.id} video={video} />
+        ))}
       </div>
-  </div>
+    </div>
 
 
     </>

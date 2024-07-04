@@ -1,13 +1,56 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import NavDetails from '../components/NavDetails';
 import Comments from '../components/Comments';
 import Recommed from '../components/Recommed';
+import Des from '../components/Des';
+import axios from 'axios';
+
 
 
 
 
 export default function CardDetails() {
+  const {id} = useParams();
+
+  const [video, setVideo] = React.useState([]);
+  const [videoTitle, setVideoTitle] = React.useState('');
+  const [videoThumbnail, setVideoThumbnail] = React.useState('');
+  const [channelTitle, setChannelTitle] = React.useState('');
+  const [likeCount, setLikeCount] = React.useState('');
+  const [descraption, setDescraption] = React.useState('');
+  const [viewCount, setViewCount] = React.useState('');
+
+
+
+
+
+
+  React.useEffect(() => {
+    const fetchVideos = async () => {
+      try {
+        const response = await axios.get(`https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&maxResults=30&regionCode=US&key=AIzaSyCkmleMPcUGZQpOC8DcDWmexkwGWyzJsvI`);
+        const videos = response.data.items;
+        const selectedVideo = videos.find(video => video.id === id);
+        if (selectedVideo) {
+          setVideo(selectedVideo);
+          setVideoTitle(selectedVideo.snippet.title);
+          setVideoThumbnail(selectedVideo.snippet.thumbnails.high.url);
+          setChannelTitle(selectedVideo.snippet.channelTitle);
+          setLikeCount(selectedVideo.statistics.likeCount);
+          setDescraption(selectedVideo.snippet.description);
+          setViewCount(selectedVideo.statistics.viewCount);
+
+
+        }
+        console.log('Fetched videos:', videos);
+      } catch (error) {
+        console.error('Error fetching videos:', error);
+      }
+    };
+
+    fetchVideos();
+  }, []);
   return (
     <>
     <div className="flex p-2 text-gray-900 ">
@@ -38,21 +81,23 @@ export default function CardDetails() {
 
       </nav>
     </aside>
-            <div className='w-[100%]'>
+    <div className='w-[100%]'>
             <iframe 
             className="lg:h-64 rounded-lg sm:h-96 shadow-xl" 
             style={{ width: "99%" , height: "450px"}}
-            src="https://www.youtube.com/embed/KaLxCiilHns" 
+            src={`https://www.youtube.com/embed/${id}`}
             title="YouTube video player" 
             frameborder="0" 
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
             allowfullscreen></iframe>
-            <h2 className='h-12 mx-1 mt-6 lg:text-lg lg:font-bold'>شيخ الحارة | لقاء بسمة وهبة مع النجمة نجلاء بدر </h2>
-            <NavDetails/>
-            <Comments/>
+            
+            <h2 className='h-12 mx-1 mt-6 lg:text-lg lg:font-bold'>{video.snippet?.title} </h2>
+            <NavDetails videoId={id} thumbnail={videoThumbnail} channelTitle={channelTitle} likeCount={likeCount}/>
+            <Des desc={descraption} viewCount={viewCount}/>
+            <Comments id={id}/>
             </div>
 
-            <Recommed/>
+            <Recommed />
 
 
       </div>
