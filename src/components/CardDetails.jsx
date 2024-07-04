@@ -20,6 +20,7 @@ export default function CardDetails() {
   const [likeCount, setLikeCount] = React.useState('');
   const [descraption, setDescraption] = React.useState('');
   const [viewCount, setViewCount] = React.useState('');
+  const [categoryId, setCategoryId] = React.useState('');
 
 
 
@@ -40,6 +41,7 @@ export default function CardDetails() {
           setLikeCount(selectedVideo.statistics.likeCount);
           setDescraption(selectedVideo.snippet.description);
           setViewCount(selectedVideo.statistics.viewCount);
+          setCategoryId(selectedVideo.snippet.categoryId);
 
 
         }
@@ -57,7 +59,7 @@ export default function CardDetails() {
     <aside className="flex  h-screen w-30 flex-col items-center  bg-white">
       <nav className="flex flex-1 flex-col gap-y-4 pt-10">
 
-        <Link to="/" className="group relative rounded-xl  p-2 text-black-600 hover:bg-gray-50">
+        <Link to="/home" className="group relative rounded-xl  p-2 text-black-600 hover:bg-gray-50">
         <img className='w-7 ml-3' src="https://cdn-icons-png.flaticon.com/128/9440/9440315.png" />
         <small className='ml-3 font-thin'>Home</small>
         </Link>
@@ -97,7 +99,7 @@ export default function CardDetails() {
             <Comments id={id}/>
             </div>
 
-            <Recommed />
+            <Recommed categoryId={categoryId} />
 
 
       </div>

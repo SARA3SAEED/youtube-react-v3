@@ -5,9 +5,8 @@ export default function ListRecommend({video}) {
   
 
   return (
-    <li className="py-2 sm:py-4">
-    <div key={video.id} className="flex ">
-      <div className="">
+    // <li className="py-2 sm:py-4">
+    <div key={video.id} className="flex py-2">
         <iframe
           className=" rounded-lg"
           style={{ width: "50%" , height: "80px"}}
@@ -17,8 +16,7 @@ export default function ListRecommend({video}) {
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
         ></iframe>
-      </div>
-      <div className="w-9">
+      <div className="w-8 lg:w-48 m-1 my-4">
         <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
         {video.snippet?.title}
         </p>
@@ -28,6 +26,6 @@ export default function ListRecommend({video}) {
       </div>
      
     </div>
-  </li>
+  // </li>
   )
 }

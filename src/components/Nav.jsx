@@ -58,7 +58,7 @@ export default function Nav() {
             value={searchQuery}
             onChange={handleChange}
               className="input input-bordered rounded-3xl w-[100%] h-[30px] lg:w-[75%] lg:h-12 mr-1" />
-                  <button
+                  {/* <button
               className="w-6 p-1 lg:w-12 bg-gray-300 rounded-3xl lg:p-2"
               onClick={handleSearch}
             >
@@ -67,7 +67,7 @@ export default function Nav() {
                 src="https://img.icons8.com/?size=48&id=85836&format=png"
                 alt=""
               />
-            </button>
+            </button> */}
             <img className='w-6 p-1 lg:w-12 bg-gray-300 rounded-3xl lg:p-2'
               src="https://img.icons8.com/?size=48&id=85836&format=png" alt="" />
             <img className='w-14 lg:w-16  rounded-3xl  lg:mt-1 lg:p-5 lg:xl-5 p-5 '
